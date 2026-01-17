@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Detection</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        select, textarea, button {
+            width: 100%;
+            max-width: 800px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #1f77b4;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { background-color: #105a8b; }
+        .result-box { padding: 15px; font-size: 18px; font-weight: bold; text-align: center; border-radius:5px;}
+        .fake { background-color:#e74c3c; color:white; }
+        .real { background-color:#2ecc71; color:white; }
+        .container { max-width: 800px; margin:50px auto; padding:30px; background:white; border-radius:10px; box-shadow:0px 5px 15px rgba(0,0,0,0.1); text-align:center;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Check if News is Fake or Real</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Select news from dataset:</label>
+        <select name="news_dropdown">
+            <option value="">-- Select a news --</option>
+            {% for news_item in csv_news %}
+            <option value="{{ news_item }}">{{ news_item|truncatechars:80 }}</option>
+            {% endfor %}
+        </select>
+
+        <!--<label>Or paste your own news:</label>
+        <textarea name="news_text" placeholder="Paste news here..."></textarea>-->
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if result %}
+        <div class="result-box {% if result == 'Fake' %}fake{% else %}real{% endif %}">
+            Prediction: {{ result }}
+        </div>
+    {% endif %}
+
+    <a href="/" class="button">Go to Dashboard</a>
+</div>
+
+</body>
+</html>
+
+
+<!--{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Detection</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        textarea {
+            width: 100%;
+            max-width: 800px;
+            height: 150px;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #1f77b4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #105a8b;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .fake {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .real {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        a.button {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Check if News is Fake or Real</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="news" placeholder="Paste your news here..." required></textarea><br>
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if result %}
+        <div class="result-box {% if result == 'Fake' %}fake{% else %}real{% endif %}">
+            Prediction: {{ result }}
+        </div>
+    {% endif %}
+
+    <a href="/" class="button">Go to Dashboard</a>
+</div>
+
+</body>
+</html>-->

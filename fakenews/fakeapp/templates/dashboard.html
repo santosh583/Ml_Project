@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake News Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header>
+    <h1>Fake News Detection Dashboard</h1>
+</header>
+
+<div class="container">
+
+    <h2>News Summary</h2>
+
+    <canvas id="pieChart"></canvas>
+
+    <script>
+        var chart_data = JSON.parse('{{ chart_data|escapejs }}');
+
+        var ctx = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: chart_data.labels,
+                datasets: [{
+                    data: chart_data.data,
+                    backgroundColor: ['#e74c3c','#2ecc71'],
+                    borderColor: ['#c0392b','#27ae60'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <h2>Recent News Checked</h2>
+    <table>
+        <tr>
+            <th>News</th>
+            <th>Result</th>
+            <th>Time</th>
+        </tr>
+        {% for n in news %}
+        <tr>
+            <td>{{ n.text|truncatechars:70 }}</td>
+            <td>{{ n.result }}</td>
+            <td>{{ n.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No news checked yet.</td></tr>
+        {% endfor %}
+    </table>
+
+    <a href="/predict/" class="button">Check a News</a>
+
+</div>
+
+</body>
+</html>
